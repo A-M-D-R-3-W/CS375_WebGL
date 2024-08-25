@@ -1,0 +1,5 @@
+# Assignment 1 - WebGL Examples
+
+I found [Rainforest](https://www.shadertoy.com/view/4ttSWf), created by *Inigo Quilez* on ***ShaderToy***, to be particularly fascinating. In fact, I found just about every demo on ShaderToy to be very impressive. To be honest, I was entirely unaware that shaders of this caliber could be hosted and used in a browser. The scene he created is quite beautiful, and very complex. Using noise to represent the trees is a smart trick, as you can't see their geometry from that distance anyway. I'm starting to see how shader creation really is just a combination of tricks & illusions.
+
+Another shader I found quite interesting was [Seascape](https://www.shadertoy.com/view/Ms2SD1), created by *TDM* also on ***ShaderToy***, but for a different reason. This scene is equally impressive in regard to it's realism, but what surprised me most was it's relatively simple implementation. Again this is a very complex, procedural scene (with no textures!), though it is created in only 204 lines. No doubt the math behind this is insanely complicated though. 
