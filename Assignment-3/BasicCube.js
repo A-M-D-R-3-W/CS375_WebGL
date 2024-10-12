@@ -122,13 +122,13 @@ class BasicCube {
             -0.5, -0.5, -0.5,
             -0.5, 0.5, -0.5,
 
-
-
         ])
 
 
 
 
+        // Manual version, as opposed to using the Attribute class
+        /*
         // Create and bind a buffer - from Class 12
 
         // Create a buffer to store the vertex positions
@@ -137,6 +137,7 @@ class BasicCube {
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         // Load the buffer with data
         gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+        */
 
 
 
@@ -150,12 +151,27 @@ class BasicCube {
 
 
 
+        let aPosition = new Attribute(gl, program, "aPosition", positions, 3, gl.FLOAT);
+
 
 
         this.draw = () => {
             program.use();
 
-            
+            aPosition.enable();
+
+            gl.drawArrays(gl.TRIANGLES, 0, aPosition.count);
+
+            aPosition.disable();
+
+
+
+
+
+
+            // Manual version of the above code, as opposed to using the Attribute class
+
+            /*
             // Class 12
 
             // Specifying the connection --------------------------------------------
@@ -198,7 +214,7 @@ class BasicCube {
             gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
             // ----------------------------------------------------------------------
-
+            */
         };
     }
 };
