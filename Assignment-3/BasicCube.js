@@ -28,8 +28,6 @@ class BasicCube {
                 // 3 components per vertex (x, y, z)
                 // Counter-clockwise winding order
 
-                vColor[gl_VertexID] = 1.0;
-
                 const vec3 vertices[] = vec3[3](
                     vec3( 1.0, 0.0, 0.0),       // Vertex 0
                     vec3(-0.5, 0.866, 0.0),     // Vertex 1
