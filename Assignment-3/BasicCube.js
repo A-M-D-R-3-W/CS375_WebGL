@@ -29,9 +29,9 @@ class BasicCube {
                 // Counter-clockwise winding order
 
                 const vec3 vertices[] = vec3[3](
-                    vec3( 1.0, 0.0, 0.0),       // Vertex 0
-                    vec3(-0.5, 0.866, 0.0),     // Vertex 1
-                    vec3(-0.5, -0.866, 0.0)     // Vertex 2
+                    vec3( 0.75, 0.75, 0.0),       // Vertex 0
+                    vec3(-0.75, 0.75, 0.0),     // Vertex 1
+                    vec3(-0.75, -0.75, 0.0)     // Vertex 2
                 );
 
                 // Choose the appropriate vertex based on gl_VertexID
@@ -43,9 +43,18 @@ class BasicCube {
             //uniform vec4 color;
             out vec4 fColor;
 
+            //void main() {
+            //    fColor = vec4(1.0, 1.0, 0.0, 1.0);
+            //}
+
+            // Front facing (yellow, correct) and back facing (green, incorrect) colors
+            const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
+            const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
+
             void main() {
-                fColor = vec4(1.0, 1.0, 0.0, 1.0);
+                fColor = gl_FrontFacing ? frontColor : backColor;
             }
+
         `;
 
 
@@ -53,7 +62,6 @@ class BasicCube {
         // encapsulates our shader program (what was previously returned from initShaders(), 
         // and initializes all of the uniform variables.
         let program = new ShaderProgram(gl, this, vertexShader, fragmentShader);
-
 
 
 
