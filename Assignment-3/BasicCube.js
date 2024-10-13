@@ -23,12 +23,18 @@ class BasicCube {
             // Can be a vec4, but using vec3 as all vertices have w=1.0
             in vec3 aPosition;
 
+            in vec3 aColor;
+
+            out vec4 vColor;
+
             uniform mat4 P;  // Projection transformation
             uniform mat4 MV; // Model-view transformation
 
             // webGL version of float is gl.FLOAT
         
             void main() {
+
+                vColor = vec4(aColor, 1.0);
 
                 // Set gl_Position to the transformed vertex position, and set w to 1.0
                 gl_Position = P * MV * vec4(aPosition, 1.0);
@@ -37,20 +43,23 @@ class BasicCube {
         `;
 
         fragmentShader ||= glsl`
-            //uniform vec4 color;
-            out vec4 fColor;
 
-            //void main() {
-            //    fColor = vec4(1.0, 1.0, 0.0, 1.0);
-            //}
+            out vec4 fColor;
+            in vec4 vColor;
+
+            void main() {
+                fColor = vColor;
+            }
 
             // Front facing (yellow, correct) and back facing (green, incorrect) colors
+            /*
             const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
             const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
 
             void main() {
                 fColor = gl_FrontFacing ? frontColor : backColor;
             }
+            */
 
         `;
 
@@ -124,6 +133,75 @@ class BasicCube {
 
         ])
 
+        // orange: 1.0, 0.608, 1.0,
+        // yellow: 1.0, 1.0, 0.0,
+        // green: 0.0, 1.0, 0.0,
+        // blue: 0.0, 0.0, 1.0,
+        // purple: 1.0, 0.0, 1.0,
+        // white: 1.0, 1.0, 1.0,
+
+
+        let colors = new Float32Array([
+
+            // Front face
+            1.0,  0.6, 0.0,
+            1.0,  0.6, 0.0,
+            1.0,  0.6, 0.0,
+
+            1.0,  0.6, 0.0,
+            1.0,  0.6, 0.0,
+            1.0,  0.6, 0.0,
+
+
+            // Back face
+            1.0, 1.0, 0.0,
+            1.0, 1.0, 0.0,
+            1.0, 1.0, 0.0,
+
+            1.0, 1.0, 0.0,
+            1.0, 1.0, 0.0,
+            1.0, 1.0, 0.0,
+
+
+            // Top face
+            0.0, 1.0, 0.0,
+            0.0, 1.0, 0.0,
+            0.0, 1.0, 0.0,
+
+            0.0, 1.0, 0.0,
+            0.0, 1.0, 0.0,
+            0.0, 1.0, 0.0,
+
+
+            // Bottom face
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0,
+
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0,
+
+
+            // Right face
+            1.0, 0.0, 1.0,
+            1.0, 0.0, 1.0,
+            1.0, 0.0, 1.0,
+
+            1.0, 0.0, 1.0,
+            1.0, 0.0, 1.0,
+            1.0, 0.0, 1.0,
+
+
+            // Left face
+            1.0, 1.0, 1.0, 
+            1.0, 1.0, 1.0, 
+            1.0, 1.0, 1.0,
+
+            1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0,
+        ]);
 
 
 
@@ -152,6 +230,7 @@ class BasicCube {
 
 
         let aPosition = new Attribute(gl, program, "aPosition", positions, 3, gl.FLOAT);
+        let aColor = new Attribute(gl, program, "aColor", colors, 3, gl.FLOAT);
 
 
 
@@ -159,10 +238,12 @@ class BasicCube {
             program.use();
 
             aPosition.enable();
+            aColor.enable();
 
             gl.drawArrays(gl.TRIANGLES, 0, aPosition.count);
 
             aPosition.disable();
+            aColor.disable();
 
 
 
