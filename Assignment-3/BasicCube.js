@@ -47,24 +47,26 @@ class BasicCube {
             out vec4 fColor;
             in vec4 vColor;
 
-            void main() {
+            /*void main() {
                 fColor = vColor;
-            }
+            }*/
 
             // Front facing (yellow, correct) and back facing (green, incorrect) colors
-            /*
+            
             const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
             const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
 
             void main() {
                 fColor = gl_FrontFacing ? frontColor : backColor;
             }
-            */
+            
 
         `;
 
-
-
+// backwards faces:
+// positive y
+// negative z
+// positive x
 
 
         // looking down the negative z-axis
@@ -72,7 +74,7 @@ class BasicCube {
         // Skip the w component for now, easier to add later in the vertex shader
         let positions = new Float32Array([
 
-            // Front face
+            // Front face (positive z) (orange)
             0.5, 0.5, 0.5,
             -0.5, 0.5, 0.5,
             -0.5, -0.5, 0.5,
@@ -82,27 +84,27 @@ class BasicCube {
             0.5, -0.5, 0.5,
 
 
-            // Back face
-            0.5, 0.5, -0.5,
+            // Back face (negative z) (yellow) (backwards)
+            -0.5, -0.5, -0.5,
             -0.5, 0.5, -0.5,
-            -0.5, -0.5, -0.5,
-
             0.5, 0.5, -0.5,
-            -0.5, -0.5, -0.5,
+
             0.5, -0.5, -0.5,
-
-
-            // Top face
-            0.5, 0.5, 0.5,
-            -0.5, 0.5, 0.5,
-            -0.5, 0.5, -0.5,
-
-            0.5, 0.5, 0.5,
-            -0.5, 0.5, -0.5,
+            -0.5, -0.5, -0.5,
             0.5, 0.5, -0.5,
 
 
-            // Bottom face
+            // Top face (positive y) (green) (backwards)
+            -0.5, 0.5, -0.5,
+            -0.5, 0.5, 0.5,
+            0.5, 0.5, 0.5,
+
+            0.5, 0.5, -0.5,
+            -0.5, 0.5, -0.5,
+            0.5, 0.5, 0.5,
+
+
+            // Bottom face (negative y) (blue)
             0.5, -0.5, 0.5,
             -0.5, -0.5, 0.5,
             -0.5, -0.5, -0.5,
@@ -112,7 +114,7 @@ class BasicCube {
             0.5, -0.5, -0.5,
 
 
-            // Right face
+            // Right face (positive x) (purple) (backwards)
             0.5, 0.5, 0.5,
             0.5, -0.5, 0.5,
             0.5, -0.5, -0.5,
@@ -122,14 +124,14 @@ class BasicCube {
             0.5, 0.5, -0.5,
 
 
-            // Left face
-            -0.5, 0.5, 0.5,  
+            // Left face (negative x) (white) 
+            -0.5, -0.5, -0.5,
             -0.5, -0.5, 0.5,  
-            -0.5, -0.5, -0.5,
+            -0.5, 0.5, 0.5, 
 
-            -0.5, 0.5, 0.5,
-            -0.5, -0.5, -0.5,
             -0.5, 0.5, -0.5,
+            -0.5, -0.5, -0.5,
+            -0.5, 0.5, 0.5,
 
         ])
 
