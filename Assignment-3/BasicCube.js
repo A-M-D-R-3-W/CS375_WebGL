@@ -5,10 +5,15 @@
 //  A cube defined of 12 triangles
 //
 
+
+
 // GLSL template literal for syntax highlighting in vertex/fragment shaders
+// For all transparency, I did not come up with this solution for syntax highlighting.
 function glsl(strings) {
     return strings.raw[0];
 }
+
+
 
 class BasicCube {
     constructor(gl, vertexShader, fragmentShader) {
@@ -22,7 +27,6 @@ class BasicCube {
             // aPosition is an attribute, so it has a leading 'a'
             // Can be a vec4, but using vec3 as all vertices have w=1.0
             in vec3 aPosition;
-
             in vec3 aColor;
 
             out vec4 vColor;
@@ -47,26 +51,23 @@ class BasicCube {
             out vec4 fColor;
             in vec4 vColor;
 
-            /*void main() {
+            void main() {
                 fColor = vColor;
-            }*/
+            }
 
             // Front facing (yellow, correct) and back facing (green, incorrect) colors
             
-            const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
+            /*const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
             const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
 
             void main() {
                 fColor = gl_FrontFacing ? frontColor : backColor;
-            }
+            }*/
             
 
         `;
 
-// backwards faces:
-// positive y
-// negative z
-// positive x
+
 
 
         // looking down the negative z-axis
@@ -84,7 +85,7 @@ class BasicCube {
             0.5, -0.5, 0.5,
 
 
-            // Back face (negative z) (yellow) (backwards)
+            // Back face (negative z) (yellow)
             -0.5, -0.5, -0.5,
             -0.5, 0.5, -0.5,
             0.5, 0.5, -0.5,
@@ -94,7 +95,7 @@ class BasicCube {
             0.5, 0.5, -0.5,
 
 
-            // Top face (positive y) (green) (backwards)
+            // Top face (positive y) (green)
             -0.5, 0.5, -0.5,
             -0.5, 0.5, 0.5,
             0.5, 0.5, 0.5,
@@ -114,7 +115,7 @@ class BasicCube {
             0.5, -0.5, -0.5,
 
 
-            // Right face (positive x) (purple) (backwards)
+            // Right face (positive x) (purple)
             0.5, 0.5, 0.5,
             0.5, -0.5, 0.5,
             0.5, -0.5, -0.5,
@@ -135,17 +136,10 @@ class BasicCube {
 
         ])
 
-        // orange: 1.0, 0.608, 1.0,
-        // yellow: 1.0, 1.0, 0.0,
-        // green: 0.0, 1.0, 0.0,
-        // blue: 0.0, 0.0, 1.0,
-        // purple: 1.0, 0.0, 1.0,
-        // white: 1.0, 1.0, 1.0,
-
 
         let colors = new Float32Array([
 
-            // Front face
+            // Front face (positive z) (orange)
             1.0,  0.6, 0.0,
             1.0,  0.6, 0.0,
             1.0,  0.6, 0.0,
@@ -155,7 +149,7 @@ class BasicCube {
             1.0,  0.6, 0.0,
 
 
-            // Back face
+            // Back face (negative z) (yellow)
             1.0, 1.0, 0.0,
             1.0, 1.0, 0.0,
             1.0, 1.0, 0.0,
@@ -165,7 +159,7 @@ class BasicCube {
             1.0, 1.0, 0.0,
 
 
-            // Top face
+            // Top face (positive y) (green)
             0.0, 1.0, 0.0,
             0.0, 1.0, 0.0,
             0.0, 1.0, 0.0,
@@ -175,7 +169,7 @@ class BasicCube {
             0.0, 1.0, 0.0,
 
 
-            // Bottom face
+            // Bottom face (negative y) (blue)
             0.0, 0.0, 1.0,
             0.0, 0.0, 1.0,
             0.0, 0.0, 1.0,
@@ -185,7 +179,7 @@ class BasicCube {
             0.0, 0.0, 1.0,
 
 
-            // Right face
+            // Right face (positive x) (purple)
             1.0, 0.0, 1.0,
             1.0, 0.0, 1.0,
             1.0, 0.0, 1.0,
@@ -195,7 +189,7 @@ class BasicCube {
             1.0, 0.0, 1.0,
 
 
-            // Left face
+            // Left face (negative x) (white) 
             1.0, 1.0, 1.0, 
             1.0, 1.0, 1.0, 
             1.0, 1.0, 1.0,
@@ -221,19 +215,13 @@ class BasicCube {
 
 
 
-
-
-
-
         // encapsulates our shader program (what was previously returned from initShaders(), 
         // and initializes all of the uniform variables.
         let program = new ShaderProgram(gl, this, vertexShader, fragmentShader);
 
 
-
         let aPosition = new Attribute(gl, program, "aPosition", positions, 3, gl.FLOAT);
         let aColor = new Attribute(gl, program, "aColor", colors, 3, gl.FLOAT);
-
 
 
         this.draw = () => {
@@ -246,9 +234,6 @@ class BasicCube {
 
             aPosition.disable();
             aColor.disable();
-
-
-
 
 
 
