@@ -8,7 +8,8 @@
 
 
 // GLSL template literal for syntax highlighting in vertex/fragment shaders
-// For all transparency, I did not come up with this solution for syntax highlighting.
+// For all transparency, I did not come up with this solution for syntax highlighting,
+// but it is very useful in debugging the shaders.
 function glsl(strings) {
     return strings.raw[0];
 }
@@ -51,18 +52,18 @@ class BasicCube {
             out vec4 fColor;
             in vec4 vColor;
 
-            void main() {
+            /*void main() {
                 fColor = vColor;
-            }
+            }*/
 
             // Front facing (yellow, correct) and back facing (green, incorrect) colors
             
-            /*const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
+            const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
             const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
 
             void main() {
                 fColor = gl_FrontFacing ? frontColor : backColor;
-            }*/
+            }
             
 
         `;
@@ -76,77 +77,71 @@ class BasicCube {
         let positions = new Float32Array([
 
             // Front face (positive z) (orange)
-            0.5, 0.5, 0.5,
-            -0.5, 0.5, 0.5,
-            -0.5, -0.5, 0.5,
-
-            0.5, 0.5, 0.5,
-            -0.5, -0.5, 0.5,
-            0.5, -0.5, 0.5,
-
-
+            0.5, 0.5, 0.5,   // Vertex 0
+            -0.5, 0.5, 0.5,  // Vertex 1
+            -0.5, -0.5, 0.5, // Vertex 2
+            
+            0.5, 0.5, 0.5,   // Vertex 3
+            -0.5, -0.5, 0.5, // Vertex 4
+            0.5, -0.5, 0.5,  // Vertex 5
+            
             // Back face (negative z) (yellow)
-            -0.5, -0.5, -0.5,
-            -0.5, 0.5, -0.5,
-            0.5, 0.5, -0.5,
-
-            0.5, -0.5, -0.5,
-            -0.5, -0.5, -0.5,
-            0.5, 0.5, -0.5,
-
-
+            -0.5, -0.5, -0.5, // Vertex 6
+            -0.5, 0.5, -0.5,  // Vertex 7
+            0.5, 0.5, -0.5,   // Vertex 8
+            
+            0.5, -0.5, -0.5,  // Vertex 9
+            -0.5, -0.5, -0.5, // Vertex 10
+            0.5, 0.5, -0.5,   // Vertex 11
+            
             // Top face (positive y) (green)
-            -0.5, 0.5, -0.5,
-            -0.5, 0.5, 0.5,
-            0.5, 0.5, 0.5,
-
-            0.5, 0.5, -0.5,
-            -0.5, 0.5, -0.5,
-            0.5, 0.5, 0.5,
-
-
+            -0.5, 0.5, -0.5,  // Vertex 12
+            -0.5, 0.5, 0.5,   // Vertex 13
+            0.5, 0.5, 0.5,    // Vertex 14
+            
+            0.5, 0.5, -0.5,   // Vertex 15
+            -0.5, 0.5, -0.5,  // Vertex 16
+            0.5, 0.5, 0.5,    // Vertex 17
+            
             // Bottom face (negative y) (blue)
-            0.5, -0.5, 0.5,
-            -0.5, -0.5, 0.5,
-            -0.5, -0.5, -0.5,
-
-            0.5, -0.5, 0.5,
-            -0.5, -0.5, -0.5,
-            0.5, -0.5, -0.5,
-
-
+            0.5, -0.5, 0.5,   // Vertex 18
+            -0.5, -0.5, 0.5,  // Vertex 19
+            -0.5, -0.5, -0.5, // Vertex 20
+            
+            0.5, -0.5, 0.5,   // Vertex 21
+            -0.5, -0.5, -0.5, // Vertex 22
+            0.5, -0.5, -0.5,  // Vertex 23
+            
             // Right face (positive x) (purple)
-            0.5, 0.5, 0.5,
-            0.5, -0.5, 0.5,
-            0.5, -0.5, -0.5,
-
-            0.5, 0.5, 0.5,
-            0.5, -0.5, -0.5,
-            0.5, 0.5, -0.5,
-
-
-            // Left face (negative x) (white) 
-            -0.5, -0.5, -0.5,
-            -0.5, -0.5, 0.5,  
-            -0.5, 0.5, 0.5, 
-
-            -0.5, 0.5, -0.5,
-            -0.5, -0.5, -0.5,
-            -0.5, 0.5, 0.5,
-
-        ])
+            0.5, 0.5, 0.5,    // Vertex 24
+            0.5, -0.5, 0.5,   // Vertex 25
+            0.5, -0.5, -0.5,  // Vertex 26
+            
+            0.5, 0.5, 0.5,    // Vertex 27
+            0.5, -0.5, -0.5,  // Vertex 28
+            0.5, 0.5, -0.5,   // Vertex 29
+            
+            // Left face (negative x) (white)
+            -0.5, -0.5, -0.5, // Vertex 30
+            -0.5, -0.5, 0.5,  // Vertex 31
+            -0.5, 0.5, 0.5,   // Vertex 32
+            
+            -0.5, 0.5, -0.5,  // Vertex 33
+            -0.5, -0.5, -0.5, // Vertex 34
+            -0.5, 0.5, 0.5,   // Vertex 35
+        ]);
 
 
         let colors = new Float32Array([
 
             // Front face (positive z) (orange)
-            1.0,  0.6, 0.0,
-            1.0,  0.6, 0.0,
-            1.0,  0.6, 0.0,
+            1.0, 0.6, 0.0,
+            1.0, 0.6, 0.0,
+            1.0, 0.6, 0.0,
 
-            1.0,  0.6, 0.0,
-            1.0,  0.6, 0.0,
-            1.0,  0.6, 0.0,
+            1.0, 0.6, 0.0,
+            1.0, 0.6, 0.0,
+            1.0, 0.6, 0.0,
 
 
             // Back face (negative z) (yellow)

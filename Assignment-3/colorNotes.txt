@@ -1,0 +1,31 @@
+All Possible Vertices:
+
+We have 3 spots (x, y, z), with 2 possible
+values: positive or negative.
+
+So, doing a combination, we get:
+2 * 2 * 2 = 2^3 = 8 possible combinations.
+
+0.5, 0.5, 0.5
+-0.5, 0.5, 0.5
+-0.5, -0.5, 0.5
+-0.5, -0.5, -0.5
+0.5, -0.5, -0.5
+0.5, 0.5, -0.5
+0.5, -0.5, 0.5
+-0.5, 0.5, -0.5
+
+
+Now, let's assign the vertex numbers to these positions.
+
+0.5, 0.5, 0.5       (0, 3, 14, 17, 24, 27)
+-0.5, 0.5, 0.5      (1, 13, 32, 35)
+-0.5, -0.5, 0.5     (2, 4, 19, 31)
+-0.5, -0.5, -0.5    (6, 10, 20, 22, 30, 34)
+0.5, -0.5, -0.5     (9, 23, 26, 28)
+0.5, 0.5, -0.5      (8, 11, 15, 29)
+0.5, -0.5, 0.5      (5, 18, 21, 25)
+-0.5, 0.5, -0.5     (7, 12, 16, 33)
+
+= All 36 vertices accounted for.
+
