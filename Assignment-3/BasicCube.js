@@ -52,18 +52,18 @@ class BasicCube {
             out vec4 fColor;
             in vec4 vColor;
 
-            /*void main() {
+            void main() {
                 fColor = vColor;
-            }*/
+            }
 
             // Front facing (yellow, correct) and back facing (green, incorrect) colors
             
-            const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
+            /*const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
             const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
 
             void main() {
                 fColor = gl_FrontFacing ? frontColor : backColor;
-            }
+            }*/
             
 
         `;
@@ -76,122 +76,150 @@ class BasicCube {
         // Skip the w component for now, easier to add later in the vertex shader
         let positions = new Float32Array([
 
-            // Front face (positive z) (orange)
-            0.5, 0.5, 0.5,   // Vertex 0
-            -0.5, 0.5, 0.5,  // Vertex 1
-            -0.5, -0.5, 0.5, // Vertex 2
+            // Front face (positive z)
+
+            0.5, 0.5, 0.5,   //vertex 0
+            -0.5, 0.5, 0.5,  //vertex 1
+            -0.5, -0.5, 0.5, //vertex 2
             
-            0.5, 0.5, 0.5,   // Vertex 3
-            -0.5, -0.5, 0.5, // Vertex 4
-            0.5, -0.5, 0.5,  // Vertex 5
+            0.5, 0.5, 0.5,   //vertex 3
+            -0.5, -0.5, 0.5, //vertex 4
+            0.5, -0.5, 0.5,  //vertex 5
             
-            // Back face (negative z) (yellow)
-            -0.5, -0.5, -0.5, // Vertex 6
-            -0.5, 0.5, -0.5,  // Vertex 7
-            0.5, 0.5, -0.5,   // Vertex 8
+            // Back face (negative z)
+
+            -0.5, -0.5, -0.5, //vertex 6
+            -0.5, 0.5, -0.5,  //vertex 7
+            0.5, 0.5, -0.5,   //vertex 8
             
-            0.5, -0.5, -0.5,  // Vertex 9
-            -0.5, -0.5, -0.5, // Vertex 10
-            0.5, 0.5, -0.5,   // Vertex 11
+            0.5, -0.5, -0.5,  //vertex 9
+            -0.5, -0.5, -0.5, //vertex 10
+            0.5, 0.5, -0.5,   //vertex 11
             
-            // Top face (positive y) (green)
-            -0.5, 0.5, -0.5,  // Vertex 12
-            -0.5, 0.5, 0.5,   // Vertex 13
-            0.5, 0.5, 0.5,    // Vertex 14
+            // Top face (positive y)
+
+            -0.5, 0.5, -0.5,  //vertex 12
+            -0.5, 0.5, 0.5,   //vertex 13
+            0.5, 0.5, 0.5,    //vertex 14
             
-            0.5, 0.5, -0.5,   // Vertex 15
-            -0.5, 0.5, -0.5,  // Vertex 16
-            0.5, 0.5, 0.5,    // Vertex 17
+            0.5, 0.5, -0.5,   //vertex 15
+            -0.5, 0.5, -0.5,  //vertex 16
+            0.5, 0.5, 0.5,    //vertex 17
             
-            // Bottom face (negative y) (blue)
-            0.5, -0.5, 0.5,   // Vertex 18
-            -0.5, -0.5, 0.5,  // Vertex 19
-            -0.5, -0.5, -0.5, // Vertex 20
+            // Bottom face (negative y)
+
+            0.5, -0.5, 0.5,   //vertex 18
+            -0.5, -0.5, 0.5,  //vertex 19
+            -0.5, -0.5, -0.5, //vertex 20
             
-            0.5, -0.5, 0.5,   // Vertex 21
-            -0.5, -0.5, -0.5, // Vertex 22
-            0.5, -0.5, -0.5,  // Vertex 23
+            0.5, -0.5, 0.5,   //vertex 21
+            -0.5, -0.5, -0.5, //vertex 22
+            0.5, -0.5, -0.5,  //vertex 23
             
-            // Right face (positive x) (purple)
-            0.5, 0.5, 0.5,    // Vertex 24
-            0.5, -0.5, 0.5,   // Vertex 25
-            0.5, -0.5, -0.5,  // Vertex 26
+            // Right face (positive x)
+
+            0.5, 0.5, 0.5,    //vertex 24
+            0.5, -0.5, 0.5,   //vertex 25
+            0.5, -0.5, -0.5,  //vertex 26
             
-            0.5, 0.5, 0.5,    // Vertex 27
-            0.5, -0.5, -0.5,  // Vertex 28
-            0.5, 0.5, -0.5,   // Vertex 29
+            0.5, 0.5, 0.5,    //vertex 27
+            0.5, -0.5, -0.5,  //vertex 28
+            0.5, 0.5, -0.5,   //vertex 29
             
-            // Left face (negative x) (white)
-            -0.5, -0.5, -0.5, // Vertex 30
-            -0.5, -0.5, 0.5,  // Vertex 31
-            -0.5, 0.5, 0.5,   // Vertex 32
+            // Left face (negative x)
             
-            -0.5, 0.5, -0.5,  // Vertex 33
-            -0.5, -0.5, -0.5, // Vertex 34
-            -0.5, 0.5, 0.5,   // Vertex 35
+            -0.5, -0.5, -0.5, //vertex 30
+            -0.5, -0.5, 0.5,  //vertex 31
+            -0.5, 0.5, 0.5,   //vertex 32
+            
+            -0.5, 0.5, -0.5,  //vertex 33
+            -0.5, -0.5, -0.5, //vertex 34
+            -0.5, 0.5, 0.5,   //vertex 35
         ]);
+
+
+        // Colors for each face
+        // declaring them here makes it easier to change colors later,
+        // and also makes it easier to see the color-vertex relationship
+        // all values are normalized to 0-1 from 0-255
+
+        const color1 = [255/255, 173/255, 173/255]; // red
+        const color2 = [255/255, 214/255, 165/255]; // orange
+        const color3 = [253/255, 255/255, 182/255]; // yellow
+        const color4 = [202/255, 255/255, 191/255]; // green
+        const color5 = [155/255, 246/255, 255/255]; // light blue
+        const color6 = [160/255, 196/255, 255/255]; // dark blue
+        const color7 = [189/255, 178/255, 255/255]; // purple
+        const color8 = [255/255, 198/255, 255/255]; // pink
+
 
 
         let colors = new Float32Array([
 
-            // Front face (positive z) (orange)
-            1.0, 0.6, 0.0,
-            1.0, 0.6, 0.0,
-            1.0, 0.6, 0.0,
+            // Front face (positive z)
 
-            1.0, 0.6, 0.0,
-            1.0, 0.6, 0.0,
-            1.0, 0.6, 0.0,
+            ...color1, //vertex 0
+            ...color2, //vertex 1
+            ...color3, //vertex 2
 
-
-            // Back face (negative z) (yellow)
-            1.0, 1.0, 0.0,
-            1.0, 1.0, 0.0,
-            1.0, 1.0, 0.0,
-
-            1.0, 1.0, 0.0,
-            1.0, 1.0, 0.0,
-            1.0, 1.0, 0.0,
+            ...color1, //vertex 3
+            ...color3, //vertex 4
+            ...color7, //vertex 5
 
 
-            // Top face (positive y) (green)
-            0.0, 1.0, 0.0,
-            0.0, 1.0, 0.0,
-            0.0, 1.0, 0.0,
+            // Back face (negative z)
 
-            0.0, 1.0, 0.0,
-            0.0, 1.0, 0.0,
-            0.0, 1.0, 0.0,
+            ...color4, //vertex 6
+            ...color8, //vertex 7
+            ...color6, //vertex 8
 
-
-            // Bottom face (negative y) (blue)
-            0.0, 0.0, 1.0,
-            0.0, 0.0, 1.0,
-            0.0, 0.0, 1.0,
-
-            0.0, 0.0, 1.0,
-            0.0, 0.0, 1.0,
-            0.0, 0.0, 1.0,
+            ...color5, //vertex 9
+            ...color4, //vertex 10
+            ...color6, //vertex 11
 
 
-            // Right face (positive x) (purple)
-            1.0, 0.0, 1.0,
-            1.0, 0.0, 1.0,
-            1.0, 0.0, 1.0,
+            // Top face (positive y)
 
-            1.0, 0.0, 1.0,
-            1.0, 0.0, 1.0,
-            1.0, 0.0, 1.0,
+            ...color8, //vertex 12
+            ...color2, //vertex 13
+            ...color1, //vertex 14
+
+            ...color6, //vertex 15
+            ...color8, //vertex 16
+            ...color1, //vertex 17
 
 
-            // Left face (negative x) (white) 
-            1.0, 1.0, 1.0, 
-            1.0, 1.0, 1.0, 
-            1.0, 1.0, 1.0,
+            // Bottom face (negative y)
 
-            1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0,
+            ...color7, //vertex 18
+            ...color3, //vertex 19
+            ...color4, //vertex 20
+
+            ...color7, //vertex 21
+            ...color4, //vertex 22
+            ...color5, //vertex 23
+
+
+            // Right face (positive x)
+
+            ...color1, //vertex 24
+            ...color7, //vertex 25
+            ...color5, //vertex 26
+
+            ...color1, //vertex 27
+            ...color5, //vertex 28
+            ...color6, //vertex 29
+
+
+            // Left face (negative x)
+
+            ...color4, //vertex 30
+            ...color3, //vertex 31
+            ...color2, //vertex 32
+
+            ...color8, //vertex 33
+            ...color4, //vertex 34
+            ...color2, //vertex 35
         ]);
 
 

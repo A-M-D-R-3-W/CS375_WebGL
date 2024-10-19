@@ -27,5 +27,44 @@ Now, let's assign the vertex numbers to these positions.
 0.5, -0.5, 0.5      (5, 18, 21, 25)
 -0.5, 0.5, -0.5     (7, 12, 16, 33)
 
+
 = All 36 vertices accounted for.
 
+
+Let's do pastel colors.
+
+color1 - red
+ffadad - 255, 173, 173
+
+color2 - orange
+ffd6a5 - 255, 214, 165
+
+color3 - yellow
+fdffb6 - 253, 255, 182
+
+color4 - green
+caffbf - 202, 255, 191
+
+color5 - light blue
+9bf6ff - 155, 246, 255
+
+color6 - dark blue
+a0c4ff - 160, 196, 255
+
+color7 - purple
+bdb2ff - 189, 178, 255
+
+color8 - pink
+ffc6ff - 255, 198, 255
+
+
+So, finally, we get:
+
+color1       (0, 3, 14, 17, 24, 27)
+color2       (1, 13, 32, 35)
+color3       (2, 4, 19, 31)
+color4       (6, 10, 20, 22, 30, 34)
+color5       (9, 23, 26, 28)
+color6       (8, 11, 15, 29)
+color7       (5, 18, 21, 25)
+color8       (7, 12, 16, 33)
