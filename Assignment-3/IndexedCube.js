@@ -33,8 +33,6 @@ class IndexedCube {
 
             uniform mat4 P;  // Projection transformation
             uniform mat4 MV; // Model-view transformation
-
-            // webGL version of float is gl.FLOAT
         
             void main() {
 
@@ -54,17 +52,6 @@ class IndexedCube {
             void main() {
                 fColor = vColor;
             }
-
-            // Front facing (yellow, correct) and back facing (green, incorrect) colors
-            
-            /*const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
-            const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
-
-            void main() {
-                fColor = gl_FrontFacing ? frontColor : backColor;
-            }*/
-            
-
         `;
 
 
@@ -75,29 +62,15 @@ class IndexedCube {
         // Skip the w component for now, easier to add later in the vertex shader
         let positions = new Float32Array([
 
-            // 0
-            0.5, 0.5, 0.5,
-
-            // 1
-            -0.5, 0.5, 0.5,
-
-            // 2
-            -0.5, -0.5, 0.5,
-
-            // 3
-            -0.5, -0.5, -0.5,
-
-            // 4
-            0.5, -0.5, -0.5,
-
-            // 5
-            0.5, 0.5, -0.5,
-
-            // 6
-            0.5, -0.5, 0.5,
-
-            // 7
-            -0.5, 0.5, -0.5
+            0.5, 0.5, 0.5,      // position 0
+            -0.5, 0.5, 0.5,     // position 1
+            -0.5, -0.5, 0.5,    // position 2
+            -0.5, -0.5, -0.5,   // position 3
+            0.5, -0.5, -0.5,   // position 4
+            0.5, 0.5, -0.5,   // position 5
+            0.5, -0.5, 0.5,   // position 6
+            -0.5, 0.5, -0.5   // position 7
+            
         ]);
 
 
@@ -187,47 +160,46 @@ class IndexedCube {
 
 
         let indices = new Uint16Array([
+
             // Front face 0, 1, 2, 3, 4, 5
 
-            0, 1, 2, 
+            0, 1, 2,
             0, 2, 6,
 
             // Back face 6, 7, 8, 9, 10, 11
 
-            3, 7, 5, 
+            3, 7, 5,
             4, 3, 5,
 
             // Top face 12, 13, 14, 15, 16, 17
 
-            7, 1, 0, 
+            7, 1, 0,
             5, 7, 0,
 
             // Bottom face 18, 19, 20, 21, 22, 23
 
-            6, 2, 3, 
+            6, 2, 3,
             6, 3, 4,
 
             // Right face 24, 25, 26, 27, 28, 29
 
-            0, 6, 4, 
+            0, 6, 4,
             0, 4, 5,
 
             // Left face 30, 31, 32, 33, 34, 35
 
-            3, 2, 1, 
+            3, 2, 1,
             7, 3, 1
-
 
         ]);
 
 
+        indices = new Indices(gl, indices);
 
 
         // encapsulates our shader program (what was previously returned from initShaders(), 
         // and initializes all of the uniform variables.
         let program = new ShaderProgram(gl, this, vertexShader, fragmentShader);
-
-        indices = new Indices(gl, indices);
 
         let aPosition = new Attribute(gl, program, "aPosition", positions, 3, gl.FLOAT);
         let aColor = new Attribute(gl, program, "aColor", colors, 3, gl.FLOAT);
@@ -238,15 +210,13 @@ class IndexedCube {
 
             aPosition.enable();
             aColor.enable();
-
             indices.enable();
 
             gl.drawElements(gl.TRIANGLES, indices.count, indices.type, 0);
             
             indices.disable();
-
-            aPosition.disable();
             aColor.disable();
+            aPosition.disable();
         };
     }
 };
