@@ -57,6 +57,7 @@ class ExperimentalCube {
                 // 6:  (5, 18, 21, 25)
                 // 7:  (7, 12, 16, 33)
 
+                // assign vertex position based on gl_VertexID (same concept as indexed cube)
                 switch (gl_VertexID) {
                     case 0: case 3: case 14: case 17: case 24: case 27:
                         position = vertices[0];
@@ -128,8 +129,8 @@ class ExperimentalCube {
         this.draw = () => {
             program.use();
 
-            // drawArrays(type, starting index, number of indices)
-            gl.drawArrays(gl.TRIANGLES, 0, 33);
+            // drawArrays(type, starting index, number of vertices)
+            gl.drawArrays(gl.TRIANGLES, 0, 36);
 
 
         };
