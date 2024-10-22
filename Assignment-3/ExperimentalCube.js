@@ -1,13 +1,13 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-//  ExperimentalCube.js
+//  ExperimentalCube.js (by A-M-D-R-3-W)
 //
 //  A cube defined of 12 triangles using vertex indices (in the form of gl_VertexID),
 //  bufferless rendering, and procedural position/color assignment in the vertex shader.
 //
 //  Interestingly, I found that this method resulted in faster rendering than both
-//  Basic Cube and Indexed Cube. This may be due to my reasonably powerful GPU. Doing
-//  all the heavy lifting.
+//  Basic Cube and Indexed Cube. This may be due to my reasonably powerful GPU doing
+//  all the heavy lifting in the vertex shader.
 //
 
 // GLSL template literal for syntax highlighting in vertex/fragment shaders

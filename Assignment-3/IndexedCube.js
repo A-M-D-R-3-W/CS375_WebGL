@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-//  IndexedCube.js
+//  IndexedCube.js (by A-M-D-R-3-W)
 //
 //  A cube defined of 12 triangles using vertex indices.
 //
@@ -12,7 +12,6 @@
 function glsl(strings) {
     return strings.raw[0];
 }
-
 
 
 class IndexedCube {
@@ -55,11 +54,8 @@ class IndexedCube {
         `;
 
 
-
-
-        // looking down the negative z-axis
-        // Six faces, each face is two triangles, each triangle is three vertices
-        // Skip the w component for now, easier to add later in the vertex shader
+        // Vertex positions for the cube
+        // 8 vertices make up the cube
         let positions = new Float32Array([
 
             0.5, 0.5, 0.5,      // position 0
@@ -79,14 +75,14 @@ class IndexedCube {
         // and also makes it easier to see the color-vertex relationship
         // all values are normalized to 0-1 from 0-255
 
-        const color1 = [255/255, 173/255, 173/255]; // red
-        const color2 = [255/255, 214/255, 165/255]; // orange
-        const color3 = [253/255, 255/255, 182/255]; // yellow
-        const color4 = [202/255, 255/255, 191/255]; // green
-        const color5 = [155/255, 246/255, 255/255]; // light blue
-        const color6 = [160/255, 196/255, 255/255]; // dark blue
-        const color7 = [189/255, 178/255, 255/255]; // purple
-        const color8 = [255/255, 198/255, 255/255]; // pink
+        const color1 = [1.0, 0.6784, 0.6784]; // red
+        const color2 = [1.0, 0.8392, 0.6471]; // orange
+        const color3 = [0.9922, 1.0, 0.7137]; // yellow
+        const color4 = [0.7922, 1.0, 0.7490]; // green
+        const color5 = [0.6078, 0.9647, 1.0]; // light blue
+        const color6 = [0.6275, 0.7686, 1.0]; // dark blue
+        const color7 = [0.7412, 0.6980, 1.0]; // purple
+        const color8 = [1.0, 0.7765, 1.0];    // pink
 
 
 
@@ -220,6 +216,8 @@ class IndexedCube {
             // achieve more efficiency.  Additionally, the requirement 
             // of using a single draw call is relaxed for this version 
             // of the cube." - Dave
+            // try to create triangle strips for each face
+
             gl.drawElements(gl.TRIANGLES, indices.count, indices.type, 0);
             
             indices.disable();
