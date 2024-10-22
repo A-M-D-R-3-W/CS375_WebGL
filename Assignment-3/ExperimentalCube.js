@@ -2,11 +2,13 @@
 //
 //  ExperimentalCube.js
 //
-//  A cube defined ???
+//  A cube defined of 12 triangles using vertex indices (in the form of gl_VertexID),
+//  bufferless rendering, and procedural position/color assignment in the vertex shader.
 //
-
-// create an array of the 8 colors of the cube, and use the index to also
-// choose the color of each vertex
+//  Interestingly, I found that this method resulted in faster rendering than both
+//  Basic Cube and Indexed Cube. This may be due to my reasonably powerful GPU. Doing
+//  all the heavy lifting.
+//
 
 // GLSL template literal for syntax highlighting in vertex/fragment shaders
 function glsl(strings) {
@@ -28,10 +30,7 @@ class ExperimentalCube {
                 vec3 position;
                 vec3 color;
 
-                // assign vertex position based on gl_VertexID (same concept as indexed cube)
-                // also assign color based on gl_VertexID
-                // note: division by 255 DOES NOT work in GLSL, so normalized manually
-                switch (gl_VertexID) {
+                switch (gl_VertexID) { // assign position and color based on gl_VertexID (same concept as indexed cube)
                     case 0: case 3: case 14: case 17: case 24: case 27:
                         position = vec3(0.5, 0.5, 0.5);      // position 0
                         color = vec3(1.0, 0.6784, 0.6784);   // red
@@ -72,43 +71,20 @@ class ExperimentalCube {
         `;
 
         fragmentShader ||= glsl`
-            //uniform vec4 color;
+
             out vec4 fColor;
-
             in vec4 vColor;
-
 
             void main() {
                 fColor = vColor;
             }
-
-            // Front facing (yellow, correct) and back facing (green, incorrect) colors
-            /*const vec4 frontColor = vec4(1.0, 1.0, 0.0, 1.0);
-            const vec4 backColor = vec4(0.0, 1.0, 0.0, 1.0);
-
-            void main() {
-                fColor = gl_FrontFacing ? frontColor : backColor;
-            }*/
-
         `;
 
-
-
-        // encapsulates our shader program (what was previously returned from initShaders(), 
-        // and initializes all of the uniform variables.
         let program = new ShaderProgram(gl, this, vertexShader, fragmentShader);
-
-
-
-
 
         this.draw = () => {
             program.use();
-
-            // drawArrays(type, starting index, number of vertices)
             gl.drawArrays(gl.TRIANGLES, 0, 36);
-
-
         };
     }
 };
