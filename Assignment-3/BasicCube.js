@@ -250,11 +250,13 @@ class BasicCube {
         this.draw = () => {
             program.use();
 
+            // Enable the attributes
             aPosition.enable();
             aColor.enable();
 
             gl.drawArrays(gl.TRIANGLES, 0, aPosition.count);
 
+            // Disable the attributes (clean up)
             aPosition.disable();
             aColor.disable();
 

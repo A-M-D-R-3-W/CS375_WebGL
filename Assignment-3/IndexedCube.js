@@ -70,7 +70,7 @@ class IndexedCube {
             0.5, 0.5, -0.5,   // position 5
             0.5, -0.5, 0.5,   // position 6
             -0.5, 0.5, -0.5   // position 7
-            
+
         ]);
 
 
@@ -194,6 +194,7 @@ class IndexedCube {
         ]);
 
 
+        // converts indices into a WebGL element array
         indices = new Indices(gl, indices);
 
 
@@ -212,6 +213,13 @@ class IndexedCube {
             aColor.enable();
             indices.enable();
 
+            // NEED TO EXPLORE THIS MORE
+            // "you can basically convert from the sequential drawing 
+            // command to the indexed command, though you're encouraged to 
+            // see if you can use other WebGL triangle topologies to 
+            // achieve more efficiency.  Additionally, the requirement 
+            // of using a single draw call is relaxed for this version 
+            // of the cube." - Dave
             gl.drawElements(gl.TRIANGLES, indices.count, indices.type, 0);
             
             indices.disable();
