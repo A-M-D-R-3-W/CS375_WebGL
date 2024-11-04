@@ -14,7 +14,7 @@ function glsl(strings) {
 }
 
 
-class BasicCube {
+class Model {
     constructor(gl, vertexShader, fragmentShader) {
 
 
