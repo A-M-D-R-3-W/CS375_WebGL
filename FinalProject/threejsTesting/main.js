@@ -3,6 +3,7 @@ import * as THREE from 'three';
 // Addons
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 /*
 // importing addons
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -26,11 +27,13 @@ const loader = new GLTFLoader();
 
 let scene, camera, renderer, controls, model, axesHelper, light, loader, hemiLight, spotLight;
 
+let debug = true;
 
 
 // create a scene
 scene = new THREE.Scene();
 scene.background = new THREE.Color(0xdddddd); // set background color to light grey
+scene.fog = new THREE.Fog( 0xcccccc, 10, 50 ); // add fog to the scene (color, near, 50)
 
 
 // create a renderer
@@ -73,12 +76,16 @@ controls = new OrbitControls( camera, renderer.domElement );
 
 
 // add a hemisphere light simulating the sun
-hemiLight = new THREE.HemisphereLight( 0xffeeb1, 0x080820, 4 );
+hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444, 5 );
+//hemiLight = new THREE.HemisphereLight( 0xffeeb1, 0x080820, 4 );
+hemiLight.position.set(0, 50, 0);
 scene.add( hemiLight );
 
 
 // add a spot light to simulate the main light source
-spotLight = new THREE.SpotLight( 0xffa95c, 10 );
+spotLight = new THREE.DirectionalLight( 0xffffff, 5 );
+//spotLight = new THREE.SpotLight( 0xffa95c, 10 );
+spotLight.position.set( 10, 10, 10 );
 spotLight.castShadow = true;
 spotLight.shadow.bias = -0.0001;
 spotLight.shadow.mapSize.width = 1024*4;
@@ -89,14 +96,22 @@ scene.add( spotLight );
 
 
 
+// floor - these should be declared at the top
+
 // create a floor
-const floorGeometry = new THREE.PlaneGeometry(20, 20);
-const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -Math.PI / 2; // rotate the plane to lie on the XY plane
-floor.position.z = -0.01; // slightly offset to avoid z-fighting
+const floor = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+floor.rotation.x = - Math.PI / 2;
 floor.receiveShadow = true;
-scene.add(floor);
+scene.add( floor );
+
+// add a grid to the floor
+const grid = new THREE.GridHelper( 100, 50, 0x000000, 0x000000 ); // size, divisions, colorCenterLine, colorGrid
+grid.material.opacity = 0.2;
+grid.material.transparent = true;
+scene.add( grid );
+
+
+
 
 
 
@@ -112,6 +127,7 @@ loader.load( 'motocycle.glb', function ( gltf ) {
 
     model.scale.set(modelScale, modelScale, modelScale);
 
+    // add shadows to the model
     model.traverse(n => {
         if (n.isMesh) {
             n.castShadow = true;
@@ -122,8 +138,23 @@ loader.load( 'motocycle.glb', function ( gltf ) {
         }
     });
 
+    // compute the bounding box
+    const box = new THREE.Box3().setFromObject(model);
+    const minY = box.min.y;
 
+    // move the model to the floor
+    model.position.y -= minY;
+
+    // add the model to the scene
 	scene.add( model );
+
+    if (debug) {
+        // create the bounding box helper (visual representation of the bounding box)
+        const helper = new THREE.Box3Helper( box, 0xffff00 );
+        scene.add( helper );
+    }
+
+
 }, undefined, function ( error ) {
 	console.error( error );
 } );
@@ -131,11 +162,19 @@ loader.load( 'motocycle.glb', function ( gltf ) {
 
 
 
+// helpers
 
-// add axes
-axesHelper = new THREE.AxesHelper( 10 );
+let stats;
 
-scene.add( axesHelper );
+if (debug) {
+    // add axes
+    axesHelper = new THREE.AxesHelper( 10 );
+    scene.add( axesHelper );
+
+    // Initialize Stats
+    stats = new Stats();
+    document.body.appendChild(stats.dom);
+}
 
 
 
@@ -144,7 +183,11 @@ function animate() {
 
     controls.update();
 
-    spotLight.position.set( camera.position.x + 10, camera.position.y + 10, camera.position.z + 10 ); // set the spot light position to the camera position
+    if (debug) {
+        stats.update();
+    }
+
+    //spotLight.position.set( camera.position.x + 10, camera.position.y + 10, camera.position.z + 10 ); // set the spot light position to the camera position
 
     /*if (model) {
         model.rotation.x += 0.01;
