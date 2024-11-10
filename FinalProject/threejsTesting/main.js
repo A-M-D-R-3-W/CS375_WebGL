@@ -4,16 +4,11 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
-/*
-// importing addons
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
-// using the addons
-const controls = new OrbitControls( camera, renderer.domElement );
-const loader = new GLTFLoader();
-*/
+// todo: add auto resize window event listener
+
+
 
 // demos
 // https://threejs.org/examples/#webgl_lights_rectarealight
@@ -37,7 +32,7 @@ scene.fog = new THREE.Fog( 0xcccccc, 10, 50 ); // add fog to the scene (color, n
 
 
 // create a renderer
-renderer = new THREE.WebGLRenderer();
+renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.toneMapping = THREE.ReinhardToneMapping; // tone mapping
 renderer.toneMappingExposure = 2.3; // tone mapping exposure, because the default is too dark
@@ -98,14 +93,16 @@ scene.add( spotLight );
 
 // floor - these should be declared at the top
 
+const floorSize = 1000;
+
 // create a floor
-const floor = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+const floor = new THREE.Mesh( new THREE.PlaneGeometry( floorSize, floorSize ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
 floor.rotation.x = - Math.PI / 2;
 floor.receiveShadow = true;
 scene.add( floor );
 
 // add a grid to the floor
-const grid = new THREE.GridHelper( 100, 50, 0x000000, 0x000000 ); // size, divisions, colorCenterLine, colorGrid
+const grid = new THREE.GridHelper( floorSize, (floorSize/2), 0x000000, 0x000000 ); // size, divisions, colorCenterLine, colorGrid
 grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add( grid );
@@ -115,18 +112,75 @@ scene.add( grid );
 
 
 
+
+
+
+
+let pivot;
+
+
+
 // load a model
 
 loader = new GLTFLoader();
 
-let modelScale = 0.02;
+let targetSize = 5;
 
-loader.load( 'motocycle.glb', function ( gltf ) {
+
+controls.target.set(0, targetSize/2, 0);
+controls.update();
+
+
+loader.load('motocycle.glb', function (gltf) {
     model = gltf.scene;
-    model.position.set(0,0,0);
+    model.position.set(0, 0, 0);
 
-    model.scale.set(modelScale, modelScale, modelScale);
+    // compute the bounding box of the model
+    const box = new THREE.Box3().setFromObject(model);
 
+    // compute and log the original model size
+    const size = new THREE.Vector3();
+    box.getSize(size);
+    console.log("Original Model Size: ", size);
+
+    // calculate the scale factor to fit with a 5x5x5 box
+    const scaleFactor = targetSize / Math.max(size.x, size.y, size.z);
+
+    // apply the scale factor to the model
+    model.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+    // recompute the bounding box after scaling
+    const scaledBox = new THREE.Box3().setFromObject(model);
+    const minY = scaledBox.min.y;
+
+    // compute and log the scaled model size
+    const scaledSize = new THREE.Vector3();
+    scaledBox.getSize(scaledSize);
+    console.log("Scaled Model Size: ", scaledSize);
+
+    // adjust the model's position so that it sits on the floor
+    model.position.y -= minY;
+
+
+
+
+
+    // calculate the center of the bounding box
+    let boxCenter = new THREE.Vector3();
+    scaledBox.getCenter(boxCenter);
+
+    // offset the model so that the center of the bounding box is at the origin
+    const offsetX = boxCenter.x;
+    const offsetZ = boxCenter.z;
+    model.position.z -= offsetZ;
+    model.position.x -= offsetX;
+
+    
+
+
+    //scene.add(model);
+
+    
     // add shadows to the model
     model.traverse(n => {
         if (n.isMesh) {
@@ -138,26 +192,43 @@ loader.load( 'motocycle.glb', function ( gltf ) {
         }
     });
 
-    // compute the bounding box
-    const box = new THREE.Box3().setFromObject(model);
-    const minY = box.min.y;
 
-    // move the model to the floor
-    model.position.y -= minY;
 
-    // add the model to the scene
-	scene.add( model );
-
+    
     if (debug) {
-        // create the bounding box helper (visual representation of the bounding box)
-        const helper = new THREE.Box3Helper( box, 0xffff00 );
-        scene.add( helper );
+        // create and add the bounding box helper
+        const boxHelper = new THREE.BoxHelper(model, 0xffff00);
+        scene.add(boxHelper);
+
+        // create a (target size) box around the model to verify the scaling
+        const boxGeometry = new THREE.BoxGeometry(targetSize, targetSize, targetSize);
+        const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+        boxMesh.position.y += targetSize / 2;
+        scene.add(boxMesh);
     }
 
 
-}, undefined, function ( error ) {
-	console.error( error );
-} );
+
+    // create a pivot point for the model, so that it rotates around the center of its bounding box
+
+    let pivotBox = new THREE.Box3().setFromObject(model);
+    let pivotCenter = new THREE.Vector3();
+    pivotBox.getCenter(pivotCenter);
+    pivot = new THREE.Object3D();
+    pivot.position.copy(pivotCenter);
+    model.position.sub(pivotCenter);
+    pivot.add(model);
+    scene.add(pivot);
+
+
+}, undefined, function (error) {
+    console.error(error);
+});
+
+
+
+
 
 
 
@@ -179,20 +250,44 @@ if (debug) {
 
 
 
+
+window.addEventListener( 'resize', onWindowResize );
+
+function onWindowResize() {
+    // borrowed from https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_gltf_compressed.html
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+    animate();
+
+}
+
+
+
+
+
+
+
+
+let rotate = true;
+
 function animate() {
 
-    controls.update();
+    //controls.update();
 
     if (debug) {
         stats.update();
     }
 
-    //spotLight.position.set( camera.position.x + 10, camera.position.y + 10, camera.position.z + 10 ); // set the spot light position to the camera position
+    if (pivot && rotate) {
+        
+        pivot.rotation.y += 0.001;
+    }
 
-    /*if (model) {
-        model.rotation.x += 0.01;
-        model.rotation.y += 0.01;
-    }*/
+
 
 	renderer.render( scene, camera );
 
