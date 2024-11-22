@@ -1,3 +1,5 @@
+# Final Project Proposal
+
 ## Project Overview
 
 I plan to create a text-to-3d model generator, along with a previewer for the generated model. 
