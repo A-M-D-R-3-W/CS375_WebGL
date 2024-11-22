@@ -18,5 +18,14 @@
             }
         </script>
         <script type="module" src="./main.js"></script>
+        <div id="ui-container"></div>
+        <script>
+            // Load the UI from UI.html into the ui-container div
+            fetch('UI.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('ui-container').innerHTML = data;
+                });
+        </script>
 	</body>
 </html>
