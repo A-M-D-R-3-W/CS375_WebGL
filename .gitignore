@@ -1,6 +1,11 @@
 FinalProject/
 .env
 
+apikeys.js
+
 meshyTesting/
 
 threejsPrivateTesting/
+
+
+node_modules/
